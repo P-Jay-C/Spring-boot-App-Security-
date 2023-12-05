@@ -53,7 +53,6 @@ public class RegistrationController {
         
         resendTokenVerificationMail(user, applicationUrl(request), verificationToken);
 
-       
         return "Verification link sent";
     }
     
@@ -104,6 +103,18 @@ public class RegistrationController {
         }else{
             return "Invalid Token";
         }
+    }
+
+    @PostMapping("/changePassword")
+    public String changePassword(@RequestBody PasswordModel passwordModel){
+        User user = userService.findUserByEmail(passwordModel.getEmail());
+
+        if(!userService.checkIfValidOldPassword(user,passwordModel.getOldPassword())){
+            return "Invalid old Password";
+        }
+
+        userService.changePassword(user, passwordModel.getNewPassword());
+        return "Password Change Sucessful";
     }
 
     private String passwordResetTokenMail(User user, String applicationUrl, String token) {
