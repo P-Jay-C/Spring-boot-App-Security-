@@ -31,12 +31,19 @@ public class WebSecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-            .cors(Customizer.withDefaults())
-            .csrf(AbstractHttpConfigurer::disable)
-            .authorizeHttpRequests((requests) -> requests
-                .requestMatchers(WHITELIST_URLS).permitAll()
-                .anyRequest().authenticated())
-            .httpBasic(Customizer.withDefaults());
+                .cors(Customizer.withDefaults())
+                .csrf(AbstractHttpConfigurer::disable)
+                .authorizeHttpRequests((requests) -> requests
+                        .requestMatchers(WHITELIST_URLS).permitAll()
+                        .requestMatchers("/api/**").authenticated()
+                        .anyRequest().authenticated())
+                .oauth2Login(oauthLogin -> {
+                    oauthLogin.loginPage("/oauth2/authorization/api-client-oidc"); // Custom login page (optional)
+                    oauthLogin.defaultSuccessUrl("/hello", true); // Default post-login landing page
+                    // Further configuration can be added here
+                })
+                .oauth2Client(Customizer.withDefaults());
+
         return http.build();
     }
     

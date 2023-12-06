@@ -1,17 +1,51 @@
 # DataSource configuration
+server:
+  port: 8080
 
-server.port=8080
 
-spring.datasource.url=jdbc:mysql://localhost:3306/user_registration
-spring.datasource.username=root
-spring.datasource.password=Jerry@123
-spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
+logging:
+  level:
+    org:
+      hibernate:
+        SQL: debug
+        type:
+          descriptor:
+            sql:
+              BasicBinder: trace
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    password: Jerry@123
+    url: jdbc:mysql://localhost:3306/user_registration
+    username: root
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQLDialect
+    show-sql: true
 
-# Hibernate configuration
-spring.jpa.hibernate.ddl-auto=update
-spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.MySQLDialect
- 
-# Logging SQL statements (optional)
-spring.jpa.show-sql=true
-logging.level.org.hibernate.SQL=debug
-logging.level.org.hibernate.type.descriptor.sql.BasicBinder=trace
+  security:
+    oauth2:
+      client:
+        registration:
+          api-client-oidc:
+            provider: spring
+            client-id: api-client
+            client-secret: secret
+            authorization-grant-type: authorization_code
+            redirect-uri: "http://127.0.0.1:8080/login/oauth2/code/{registrationId}"
+            scope: openid
+            client-name: api-client-oidc
+          api-client-authorization-code:
+            provider: spring
+            client-id: api-client
+            client-secret: secret
+            authorization-grant-type: authorization_code
+            redirect-uri: "http://127.0.0.1:8080/authorized"
+            scope: api.read
+            client-name: api-client-authorization-code
+        provider:
+          spring:
+            issuer-uri: http://auth-server:9000
