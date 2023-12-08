@@ -24,6 +24,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RestController
+@RequestMapping("/api/v1/auth")
 public class RegistrationController {
 
     @Autowired
@@ -55,9 +56,6 @@ public class RegistrationController {
 
         return "Verification link sent";
     }
-    
-
-    
 
     @GetMapping("/verifyRegistration")
     public String verifyRegistration(@RequestParam("token") String token){
@@ -118,7 +116,7 @@ public class RegistrationController {
     }
 
     private String passwordResetTokenMail(User user, String applicationUrl, String token) {
-        String url = applicationUrl + "/savePassword?token="+token;
+        String url = applicationUrl + "/api/v1/auth/savePassword?token="+token;
 
         log.info("Click the link to reset your password: {}", url);
         
@@ -135,7 +133,7 @@ public class RegistrationController {
     }
 
     private void resendTokenVerificationMail(User user, String applicationUrl, VerificationToken verificationToken) {
-        String url = applicationUrl + "/verifyRegistration?token="+verificationToken.getToken();
+        String url = applicationUrl + "/api/v1/auth/verifyRegistration?token="+verificationToken.getToken();
 
         log.info("Click the link to verify your account: {}", url);
     }

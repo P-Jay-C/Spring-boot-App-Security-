@@ -17,10 +17,11 @@ public class WebSecurityConfig {
 
     private static final String[] WHITELIST_URLS = {
 
-        "/hello",
-        "/register",
-        "/verifyRegistration",
-        "/resendToken"
+        "/",
+        "api/v1/auth/register",
+        "api/v1/auth/verifyRegistration",
+        "api/v1/auth/resendToken"
+
     };
 
     @Bean
@@ -35,15 +36,10 @@ public class WebSecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests((requests) -> requests
                         .requestMatchers(WHITELIST_URLS).permitAll()
-                        .requestMatchers("/api/**").authenticated()
+                        .requestMatchers("/api/v1/auth/**").authenticated()
                         .anyRequest().authenticated())
-                .oauth2Login(oauthLogin -> {
-                    oauthLogin.loginPage("/oauth2/authorization/api-client-oidc"); // Custom login page (optional)
-                    oauthLogin.defaultSuccessUrl("/hello", true); // Default post-login landing page
-                    // Further configuration can be added here
-                })
-                .oauth2Client(Customizer.withDefaults());
-
+                .httpBasic(Customizer.withDefaults());
+               
         return http.build();
     }
     
