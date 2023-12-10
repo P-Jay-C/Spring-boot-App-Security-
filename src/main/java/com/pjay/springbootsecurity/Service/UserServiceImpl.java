@@ -26,11 +26,11 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private VerificationTokenRepository verificationTokenRepository;
     @Autowired
-    private PassswordResetTokenRepository passswordResetTokenRepository ;
+    private PassswordResetTokenRepository passswordResetTokenRepository;
 
     @Override
     public User registerUser(UserRequestDto userRequestDto) {
-        
+
         User user = new User();
         user.setFirstName(userRequestDto.getFirstName());
         user.setLastName(userRequestDto.getLastName());
@@ -40,36 +40,36 @@ public class UserServiceImpl implements UserService {
 
         userRepository.save(user);
         return user;
-    } 
+    }
 
     @Override
     public void saveVerificationTokenForUser(String token, User user) {
-        
-        VerificationToken verificationToken = new VerificationToken(user,token);
-        
+
+        VerificationToken verificationToken = new VerificationToken(user, token);
+
         verificationTokenRepository.save(verificationToken);
 
     }
 
     @Override
     public String validateVerificationToken(String token) {
-        
+
         VerificationToken verificationToken = verificationTokenRepository.findByToken(token);
 
-        if(verificationToken == null){
+        if (verificationToken == null) {
             return "invalid";
         }
 
         User user = verificationToken.getUser();
         Calendar calendar = Calendar.getInstance();
 
-        if((verificationToken.getExpirationTime().getTime() - calendar.getTime().getTime()) <= 0){
+        if ((verificationToken.getExpirationTime().getTime() - calendar.getTime().getTime()) <= 0) {
             verificationTokenRepository.delete(verificationToken);
             return "expired";
         }
 
-
-        user.setEnabled(true);;
+        user.setEnabled(true);
+        ;
         userRepository.save(user);
 
         return "valid";
@@ -77,48 +77,48 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public VerificationToken generateNewVerificationToken(String oldToken) {
+        VerificationToken verificationToken = verificationTokenRepository.findByToken(oldToken);
 
-        VerificationToken verificationToken = new VerificationToken();
-        verificationToken = verificationTokenRepository.findByToken(oldToken);
+        if (verificationToken != null) {
+            verificationToken.setToken(UUID.randomUUID().toString());
+            verificationTokenRepository.save(verificationToken);
+        }
 
-        verificationToken.setToken(UUID.randomUUID().toString());
-        verificationTokenRepository.save(verificationToken) ;
-
-        return verificationToken; 
+        return verificationToken;
     }
 
     @Override
     public User findUserByEmail(String email) {
-        
+
         return userRepository.findByEmail(email);
     }
 
     @Override
     public void createPasswordResetTokenForUser(User user, String token) {
-        PasswordResetToken passwordResetToken = new PasswordResetToken(user,token);
-        
+        PasswordResetToken passwordResetToken = new PasswordResetToken(user, token);
+
         passswordResetTokenRepository.save(passwordResetToken);
 
     }
 
     @Override
     public String validatePasswordResetToken(String token) {
-         PasswordResetToken passwordResetToken = passswordResetTokenRepository.findByToken(token);
+        PasswordResetToken passwordResetToken = passswordResetTokenRepository.findByToken(token);
 
-        if(passwordResetToken == null){
+        if (passwordResetToken == null) {
             return "invalid";
         }
 
         User user = passwordResetToken.getUser();
         Calendar calendar = Calendar.getInstance();
 
-        if((passwordResetToken.getExpirationTime().getTime() - calendar.getTime().getTime()) <= 0){
+        if ((passwordResetToken.getExpirationTime().getTime() - calendar.getTime().getTime()) <= 0) {
             passswordResetTokenRepository.delete(passwordResetToken);
             return "expired";
         }
 
-
-        user.setEnabled(true);;
+        user.setEnabled(true);
+        ;
         userRepository.save(user);
 
         return "valid";
@@ -126,7 +126,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Optional<User> getUserByPasswordResetToken(String token) {
-             
+
         return Optional.ofNullable(passswordResetTokenRepository.findByToken(token).getUser());
     }
 
@@ -137,8 +137,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+
     public boolean checkIfValidOldPassword(User user, String oldPassword) {
-        return passwordEncoder.matches(oldPassword, oldPassword);
+        return passwordEncoder.matches(oldPassword, user.getPassword());
     }
-    
 }
