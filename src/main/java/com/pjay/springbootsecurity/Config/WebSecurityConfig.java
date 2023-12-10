@@ -17,18 +17,14 @@ public class WebSecurityConfig {
 
     private static final String[] WHITELIST_URLS = {
 
-        "/",
-        "api/v1/auth/register",
-        "api/v1/auth/verifyRegistration",
-        "api/v1/auth/resendToken"
-
+        "/"
     };
 
     @Bean
-    public PasswordEncoder passwordEncoder(){
+    public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder(11);
     }
-
+    
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
@@ -36,12 +32,13 @@ public class WebSecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests((requests) -> requests
                         .requestMatchers(WHITELIST_URLS).permitAll()
-                        .requestMatchers("/api/v1/auth/**").authenticated()
+                        .requestMatchers("/api/v1/auth/**").permitAll()
                         .anyRequest().authenticated())
-                .httpBasic(Customizer.withDefaults());
+                        .httpBasic(Customizer.withDefaults());
                
         return http.build();
     }
     
 }
+    
 

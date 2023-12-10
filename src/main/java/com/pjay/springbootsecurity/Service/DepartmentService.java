@@ -1,5 +1,6 @@
 package com.pjay.springbootsecurity.Service;
 
+import com.pjay.springbootsecurity.Error.DepartmentNotFoundException;
 import com.pjay.springbootsecurity.Model.Department;
 
 import java.util.List;
@@ -10,9 +11,9 @@ public interface DepartmentService {
 
     List<Department> fetchDepartmentList();
 
-    Optional<Department> fetchByDepartmentById(Long departmentId);
+    Optional<Department> fetchByDepartmentById(Long departmentId) throws DepartmentNotFoundException;
 
-    Department updateDepartment(Long departmentId, Department department);
+    Department updateDepartment(Long departmentId, Department department) throws DepartmentNotFoundException;
 
     Department findByDepartmentName(String name);
 }

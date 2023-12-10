@@ -1,5 +1,6 @@
 package com.pjay.springbootsecurity.Service;
 
+import com.pjay.springbootsecurity.Error.DepartmentNotFoundException;
 import com.pjay.springbootsecurity.Model.Department;
 import com.pjay.springbootsecurity.Repository.DepartmentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,12 +25,16 @@ public class DepartmentServiceImpl implements DepartmentService {
     }
 
     @Override
-    public Optional<Department> fetchByDepartmentById(Long departmentId) {
-        return departmentRepository.findById(departmentId);
+    public Optional<Department> fetchByDepartmentById(Long departmentId) throws DepartmentNotFoundException {
+        var department = departmentRepository.findById(departmentId);
+
+        if (!department.isPresent()) {
+            throw new DepartmentNotFoundException("Department not found");
+        }
     }
 
     @Override
-    public Department updateDepartment(Long departmentId, Department department) {
+    public Department updateDepartment(Long departmentId, Department department) throws DepartmentNotFoundException {
         
         
         Department dep = fetchByDepartmentById(departmentId).get();

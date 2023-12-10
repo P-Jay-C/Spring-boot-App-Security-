@@ -90,7 +90,7 @@ public class RegistrationController {
 
         String result = userService.validatePasswordResetToken(token);
 
-        if(!result.equalsIgnoreCase("valid ")){
+        if(!result.equalsIgnoreCase("valid")){
             return "Invalid Token";
         }
         
