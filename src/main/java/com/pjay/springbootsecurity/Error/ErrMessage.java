@@ -12,9 +12,4 @@ import org.springframework.http.HttpStatus;
 public class ErrMessage {
     private HttpStatus httpStatus;
     private String message;
-
-    public ErrMessage(HttpStatus httpStatus, String message) {
-        this.httpStatus = httpStatus;
-        this.message =message;
-    }
 }

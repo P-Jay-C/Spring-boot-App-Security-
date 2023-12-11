@@ -25,19 +25,20 @@ public class DepartmentServiceImpl implements DepartmentService {
     }
 
     @Override
-    public Optional<Department> fetchByDepartmentById(Long departmentId) throws DepartmentNotFoundException {
+    public Optional<Department> fetchByDepartmentId(Long departmentId) throws DepartmentNotFoundException {
         var department = departmentRepository.findById(departmentId);
 
         if (!department.isPresent()) {
             throw new DepartmentNotFoundException("Department not found");
         }
+        return  department;
     }
 
     @Override
     public Department updateDepartment(Long departmentId, Department department) throws DepartmentNotFoundException {
         
         
-        Department dep = fetchByDepartmentById(departmentId).get();
+        Department dep = fetchByDepartmentId(departmentId).get();
 
         if(dep != null){
             dep.setDepartmentName(department.getDepartmentName());
@@ -51,8 +52,8 @@ public class DepartmentServiceImpl implements DepartmentService {
     }
 
     @Override
-    public Department findByDepartmentName(String name) {
-        return departmentRepository.findByDepartmentName(name);
+    public Department fetchByDepartmentName(String name) {
+        return departmentRepository.findByDepartmentNameIgnoreCase(name);
     }
 
     

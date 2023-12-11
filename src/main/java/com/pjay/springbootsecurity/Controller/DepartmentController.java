@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
+@RequestMapping("/department")
 public class DepartmentController {
 
     @Autowired
@@ -22,33 +23,33 @@ public class DepartmentController {
 
     private final Logger logger = LoggerFactory.getLogger(Department.class);
 
-    @PostMapping("/departments")
+    @PostMapping("/add")
     public Department saveDepartment(@Valid @RequestBody Department department){
 
         logger.info("Inside save department of department controller");
         return departmentService.saveDepartment(department);
     }
 
-    @GetMapping("/departments")
+    @GetMapping("/getAll")
     public List<Department> fetchDepartmentList(){
         return departmentService.fetchDepartmentList();
     }
 
-    @GetMapping("/department/{id}")
+    @GetMapping("/{id}")
     public Optional<Department> fetchByDepartmentById(@PathVariable("id") Long departmentId) throws DepartmentNotFoundException {
-        return departmentService.fetchByDepartmentById(departmentId);
+        return departmentService.fetchByDepartmentId(departmentId);
     }
 
-    @PostMapping("/department/{id}")
-    public Department updateDepartment(@PathVariable("id") Long departmentId, @RequestBody Department department){
+    @PostMapping("/{id}")
+    public Department updateDepartment(@PathVariable("id") Long departmentId, @RequestBody Department department) throws DepartmentNotFoundException {
 
         return departmentService.updateDepartment(departmentId,department);
         
     }
 
-    @GetMapping("department/name/{name}")
+    @GetMapping("/name/{name}")
     public Department fetchByDepartmentName(@PathVariable("name") String name){
-        return departmentService.findByDepartmentName(name);
+        return departmentService.fetchByDepartmentName(name);
     }
 
     

@@ -17,7 +17,7 @@ public class WebSecurityConfig {
 
     private static final String[] WHITELIST_URLS = {
 
-        "/"
+        "/",
     };
 
     @Bean
@@ -31,12 +31,22 @@ public class WebSecurityConfig {
                 .cors(Customizer.withDefaults())
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests((requests) -> requests
-                        .requestMatchers(WHITELIST_URLS).permitAll()
-                        .requestMatchers("/api/v1/auth/**").permitAll()
-                        .anyRequest().authenticated())
-                        .httpBasic(Customizer.withDefaults());
+                        .requestMatchers("/**").permitAll());
+
                
         return http.build();
+
+//        http
+//                .cors(Customizer.withDefaults())
+//                .csrf(AbstractHttpConfigurer::disable)
+//                .authorizeHttpRequests((requests) -> requests
+//                        .requestMatchers(WHITELIST_URLS).permitAll()
+//                        .requestMatchers("/api/v1/auth/**").permitAll()
+//                        .requestMatchers("/department/**").permitAll()
+//                        .anyRequest().authenticated())
+//                .httpBasic(Customizer.withDefaults());
+//
+//        return http.build();
     }
     
 }
